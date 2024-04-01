@@ -1,0 +1,45 @@
+def encode_message(message, substance):
+    # Convert message to binary
+    binary_message = ''.join(format(ord(char), '08b') for char in message)
+    
+    # Calculate the length of the message
+    message_length = len(binary_message)
+    
+    # Check if the substance is large enough to encode the message
+    if len(substance) < message_length:
+        raise ValueError("Substance size is not sufficient to encode the message.")
+    
+    # Encode the message into the substance using emojis
+    encoded_substance = []
+    for i in range(message_length):
+        # Use emojis as carriers for the binary message
+        encoded_value = substance[i] + int(binary_message[i])
+        encoded_substance.append(encoded_value)
+    
+    return encoded_substance
+
+def decode_message(encoded_substance):
+    # Decode the binary message from the encoded substance
+    binary_message = ''
+    for value in encoded_substance:
+        binary_message += str(value % 2)
+    
+    # Convert the binary message back to ASCII characters
+    decoded_message = ''
+    for i in range(0, len(binary_message), 8):
+        byte = binary_message[i:i+8]
+        decoded_message += chr(int(byte, 2))
+    
+    return decoded_message
+
+# Example usage
+original_substance = [50, 100, 150, 200]  # Example chemical substance
+message_to_hide = "Hello, 🌎!"  # Message to hide
+
+# Encode the message into the substance
+encoded_substance = encode_message(message_to_hide, original_substance)
+print("Encoded substance:", encoded_substance)
+
+# Decode the message from the encoded substance
+decoded_message = decode_message(encoded_substance)
+print("Decoded message:", decoded_message)
